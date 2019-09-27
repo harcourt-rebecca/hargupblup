@@ -67,9 +67,45 @@ book](http://r4ds.had.co.nz/iteration.html).
 # Exercise 1: Investigating the North-Atlantic Cod
 
 Now we are ready to dive into our data.  First, We seek to replicate the following 
-figure from the Millenium Ecosystem Assessment Project using the RAM data. 
+figure from the Millenium Ecosystem Assessment Project using the RAM data.
+
+
+```{r}
+tbl <-
+ram$timeseries %>%
+  left_join(ram$stock) %>%
+  left_join(ram$area) %>%
+  left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
+  filter(scientificname == "Gadus morhua",
+         country == 'Canada' | country == 'USA') 
+
+  ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
+
+```
+
+```{r}
+landings_tbl <-
+tbl %>%
+  filter(tslong == 'Total catch (i.e. landings + discards. Add landings + discards to get this).')
+landings_tbl
+```
+
+
+```{r}
+grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue))
+grouped
+ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line()
+```
+
+
 
 ![](http://espm-157.carlboettiger.info/img/cod.jpg)
+
+```{r}
+ram$timeseries
+```
+
+
 
 
 
