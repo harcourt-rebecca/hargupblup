@@ -77,9 +77,10 @@ ram$timeseries %>%
   left_join(ram$area) %>%
   left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
   filter(scientificname == "Gadus morhua",
-         country == 'Canada' | country == 'USA') 
+         country == 'Canada' | country == 'USA') %>%
+  filter(tsid == "TC-MT")
 
-  ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
+  #ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
 
 ```
 
@@ -88,13 +89,23 @@ landings_tbl <-
 tbl %>%
   filter(tslong == 'Total catch (i.e. landings + discards. Add landings + discards to get this).')
 landings_tbl
+
+
 ```
 
 
 ```{r}
-grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue))
-grouped
-ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line()
+grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue, na.rm = TRUE))
+
+ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title='Total Fish Landings in Tons', x='year', y='total')
+
+grouped2 <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)
+
+
+
 ```
 
 

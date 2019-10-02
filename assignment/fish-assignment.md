@@ -100,31 +100,11 @@ ram$timeseries %>%
   left_join(ram$area) %>%
   left_join(ram$tsmetrics, by = c("tsid" = "tsunique")) %>%
   filter(scientificname == "Gadus morhua",
-         country == 'Canada' | country == 'USA') 
+         country == 'Canada' | country == 'USA') %>%
+  filter(tsid == "TC-MT")
 
-  ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
+  #ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
 ```
-
-    ## # A tibble: 17 x 2
-    ##    tslong                                                                 n
-    ##    <chr>                                                              <int>
-    ##  1 Catch divided by MSY                                                   1
-    ##  2 Catch or landings that is paired with TAC                              2
-    ##  3 Customary catch                                                        1
-    ##  4 General total Catch (TC then TL, MT units only)                        1
-    ##  5 Illegal catch                                                          1
-    ##  6 Recreational catch                                                     2
-    ##  7 Scientific advice for catch limit (pairs with Cpair and TAC)           1
-    ##  8 Total allowable catch                                                  2
-    ##  9 Total allowable catch In area greater than that of stock               1
-    ## 10 Total allowable catch In subarea                                       5
-    ## 11 Total catch (i.e. landings + discards. Add landings + discards to…     9
-    ## 12 Total catch in subarea (i.e. landings + discards. Add landings + …     3
-    ## 13 Total catch. Use only when there is more than 1 accepted 'total c…    10
-    ## 14 Total landings                                                         7
-    ## 15 Total landings combined beyond just this stock (species, area, et…     1
-    ## 16 Total landings in subarea                                              5
-    ## 17 Total landings. Use only when there is more than 1 accepted 'tota…     5
 
 ``` r
 landings_tbl <-
@@ -153,32 +133,19 @@ landings_tbl
     ## #   tslong <chr>, tsunitsshort <chr>, tsunitslong <chr>
 
 ``` r
-grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue))
-grouped
+grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue, na.rm = TRUE))
+
+ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title='Total Fish Landings in Tons', x='year', y='total')
 ```
-
-    ## # A tibble: 166 x 2
-    ##    tsyear   sum
-    ##     <dbl> <dbl>
-    ##  1   1850    NA
-    ##  2   1851    NA
-    ##  3   1852    NA
-    ##  4   1853    NA
-    ##  5   1854    NA
-    ##  6   1855    NA
-    ##  7   1856    NA
-    ##  8   1857    NA
-    ##  9   1858    NA
-    ## 10   1859    NA
-    ## # … with 156 more rows
-
-``` r
-ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line()
-```
-
-    ## Warning: Removed 148 rows containing missing values (geom_path).
 
 ![](fish-assignment_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+``` r
+grouped2 <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)
+```
 
 ![](http://espm-157.carlboettiger.info/img/cod.jpg)
 
