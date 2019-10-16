@@ -99,10 +99,6 @@ grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue, na.rm = TRU
 
 ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title='Total Fish Landings in Tons', x='year', y='total')
 
-grouped2 <- grouped %>%
-  mutate(max=cummax(x=sum)) %>%
-  mutate(collapsed = 10*max) %>%
-  mutate(iscollapsed= collapsed>sum)
 
 
 
@@ -111,13 +107,6 @@ grouped2 <- grouped %>%
 
 
 ![](http://espm-157.carlboettiger.info/img/cod.jpg)
-
-```{r}
-ram$timeseries
-```
-
-
-
 
 
 **How does your graph compare to the one presented above?**
@@ -134,6 +123,30 @@ We seek to replicate the temporal trend in stock declines shown in [Worm et al 2
 ![](http://espm-157.carlboettiger.info/img/worm2006.jpg)
 
 
+```{r}
+collapsed_tbl <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)
+collapsed_tbl
+
+grouped <- filter(grouped, tsyear > 1950)
+
+
+collapse_by_year <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)  %>%
+  group_by(tsyear)
+   
+
+collapse_by_year
+
+
+
+ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + geom_line() + scale_y_reverse( lim=c(80,0))
+
+```
 
 
 

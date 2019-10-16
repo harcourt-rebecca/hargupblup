@@ -140,33 +140,7 @@ ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title=
 
 ![](fish-assignment_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-``` r
-grouped2 <- grouped %>%
-  mutate(max=cummax(x=sum)) %>%
-  mutate(collapsed = 10*max) %>%
-  mutate(iscollapsed= collapsed>sum)
-```
-
 ![](http://espm-157.carlboettiger.info/img/cod.jpg)
-
-``` r
-ram$timeseries
-```
-
-    ## # A tibble: 951,775 x 6
-    ##    assessid            stockid stocklong            tsid     tsyear tsvalue
-    ##    <chr>               <chr>   <chr>                <chr>     <dbl>   <dbl>
-    ##  1 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1979 0.00702
-    ##  2 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1980 0.0129 
-    ##  3 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1981 0.00829
-    ##  4 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1982 0.0134 
-    ##  5 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1983 0.0145 
-    ##  6 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1984 0.0215 
-    ##  7 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1985 0.0204 
-    ##  8 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1986 0.038  
-    ##  9 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1987 0.0599 
-    ## 10 ABARES-BGRDRSE-196… BGRDRSE Blue Grenadier Sout… ERbest-…   1988 0.0489 
-    ## # … with 951,765 more rows
 
 **How does your graph compare to the one presented above?**
 
@@ -180,3 +154,62 @@ We seek to replicate the temporal trend in stock declines shown in [Worm
 et al 2006](http://doi.org/10.1126/science.1132294):
 
 ![](http://espm-157.carlboettiger.info/img/worm2006.jpg)
+
+``` r
+collapsed_tbl <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)
+collapsed_tbl
+```
+
+    ## # A tibble: 165 x 5
+    ##    tsyear    sum    max collapsed iscollapsed
+    ##     <dbl>  <dbl>  <dbl>     <dbl> <lgl>      
+    ##  1   1850 133000 133000   1330000 TRUE       
+    ##  2   1851 125000 133000   1330000 TRUE       
+    ##  3   1852 120000 133000   1330000 TRUE       
+    ##  4   1853 117000 133000   1330000 TRUE       
+    ##  5   1854 104000 133000   1330000 TRUE       
+    ##  6   1855 132000 133000   1330000 TRUE       
+    ##  7   1856 151000 151000   1510000 TRUE       
+    ##  8   1857 169000 169000   1690000 TRUE       
+    ##  9   1858 134000 169000   1690000 TRUE       
+    ## 10   1859 154000 169000   1690000 TRUE       
+    ## # … with 155 more rows
+
+``` r
+grouped <- filter(grouped, tsyear > 1950)
+
+
+collapse_by_year <- grouped %>%
+  mutate(max=cummax(x=sum)) %>%
+  mutate(collapsed = 10*max) %>%
+  mutate(iscollapsed= collapsed>sum)  %>%
+  group_by(tsyear)
+   
+
+collapse_by_year
+```
+
+    ## # A tibble: 64 x 5
+    ## # Groups:   tsyear [64]
+    ##    tsyear    sum    max collapsed iscollapsed
+    ##     <dbl>  <dbl>  <dbl>     <dbl> <lgl>      
+    ##  1   1951 272000 272000   2720000 TRUE       
+    ##  2   1952 265000 272000   2720000 TRUE       
+    ##  3   1953 251100 272000   2720000 TRUE       
+    ##  4   1954 318400 318400   3184000 TRUE       
+    ##  5   1955 282400 318400   3184000 TRUE       
+    ##  6   1956 315800 318400   3184000 TRUE       
+    ##  7   1957 292600 318400   3184000 TRUE       
+    ##  8   1958 270700 318400   3184000 TRUE       
+    ##  9   1959 438900 438900   4389000 TRUE       
+    ## 10   1960 521700 521700   5217000 TRUE       
+    ## # … with 54 more rows
+
+``` r
+ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + geom_line() + scale_y_reverse( lim=c(80,0))
+```
+
+![](fish-assignment_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
