@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.com/espm-157/fish-template.svg?branch=master)](https://travis-ci.com/espm-157/fish-template)
+[![Build Status](https://travis-ci.com/harcourt-rebecca/hargupblup.svg?branch=master)](https://travis-ci.com/harcourt-rebecca/hargupblup)
 
 ## Team Members:
 
