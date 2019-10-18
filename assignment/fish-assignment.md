@@ -185,7 +185,8 @@ landings_tbl
     ## #   tslong <chr>, tsunitsshort <chr>, tsunitslong <chr>
 
 ``` r
-grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue, na.rm = TRUE))
+grouped <- tbl %>% group_by(tsyear) %>% 
+  summarize(sum = sum(tsvalue, na.rm = TRUE))
 
 ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + 
   labs(title='Total Fish Landings in Tons', x='year', y='total')
@@ -288,7 +289,8 @@ collapse_by_year
     ## # … with 54 more rows
 
 ``` r
-#ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + geom_line() + scale_y_reverse( lim=c(80,0))
+#ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + 
+#geom_line() + scale_y_reverse( lim=c(80,0))
 ```
 
 In this section we attempted to create a graph that showed the percent
