@@ -3,6 +3,7 @@
 
 ## Team Members:
 
+- Rebecca Harcourt, harcourt-rebecca 
 - Kunal Gupta, kunalg04
 
 ## Module Overview
