@@ -7,6 +7,32 @@ knitr::opts_chunk$set(message = FALSE)
 ```
 # Unit 3: Fisheries Collapse Module
 
+## Introduction
+
+In this module we looked into the analysis of global fisheries conducted by Worm et al.,
+in "Impacts of Biodiversity Loss on Ocean Ecosystem Service" in 2006. We attempted to reproduce
+figure 3A from this paper, which shows the trajectories of collapsed fish and invertebrate 
+taxa over the past 50 years, and explored the very contraversial claim made by Worm et al.
+that in 2048, it's projected that the global collapse of all taxa currently fished will 
+occur with a rate of 100% based on extrapolation of a regression model they ran using 
+figure 3A data. 
+
+We also replicated a graph from the Millenium Ecosystem Assessment 
+Project to explore the total fish landings of North Atlantic Cod, which showed a very 
+clear increase of Cod being caught in the 1960s, following a dip in Cod being caught 
+around 1975. Another dip occured right before 2000 which was right after the Cod stock started 
+to replenish, which indicates that there is a downward trend in total Cod landings, but this is no where near enough information to support the claim from Worm et al.
+
+Worm et al. also explores ideas that the fishery collapse is correlated with loss of 
+biodiversity. Their analysis indicates that marine biodiversity is declining in almost
+all areas, and this is effecting many parts of the ecosystem such as estuaries and coral
+reefs. The graph we attempted to reproduce breaks up the taxa by species-rich and 
+species-poor to clearly show that fishery collapses occurred at a higher rate in 
+species-poor ecosystems than in species-rich ecosystems, but overall, both saw 
+a downward trend. We will not be replicating any figures or analysis on species
+diversity, but it is important to understand this one feature of many as to why 
+fisheries are seeing an overall decline.
+
 This module will focus on understanding and replicating 
 fisheries stock assessment data and fisheries collapse. 
 
@@ -81,7 +107,7 @@ ram$timeseries %>%
   filter(tsid == "TC-MT")
 
   #ram$tsmetrics %>% filter(tscategory == 'CATCH or LANDINGS') %>% count(tslong)
-
+tbl
 ```
 
 ```{r}
@@ -97,7 +123,8 @@ landings_tbl
 ```{r}
 grouped <- tbl %>% group_by(tsyear) %>% summarize(sum = sum(tsvalue, na.rm = TRUE))
 
-ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title='Total Fish Landings in Tons', x='year', y='total')
+ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + 
+  labs(title='Total Fish Landings in Tons', x='year', y='total')
 
 
 
@@ -110,6 +137,10 @@ ggplot(grouped, aes(x = tsyear, y= sum)) + geom_line(color='blue') + labs(title=
 
 
 **How does your graph compare to the one presented above?**
+
+Here we can see the graph from the Millenium Ecosystem Assessment Project using the RAM dataset. In our dataset, we ran into the issue of having missing values which we decided to ignore for the purpose of having a smooth trend line. Creating the graph required a few table manipulations such as filtering, joining, and grouping by. We first joined several dataframes to create a dataframe with all the fish, the areas, and the metrics associated with these entries. Then, we filtered for just Cod, USA and total landings, grouped by year, and summarised the data by summing total landings.
+
+This graph supports the claim from Worm et al. that total taxa caught is declining, but there is still not enough evidence to support the claim made that it is projected in 2048 to see a 100% decline in all taxa. As seen from the graph, there have been dips and peaks throughout time. For example, when many Cod were fished, the next few years saw a dip in Cod being caught unitl the stock replenished. The largest peak occured in the 1960s which was followed by the largest dip in the mid-1970s. This huge increase in catch in the 160s may be due to new technologies emerging during this time like larger and stronger nets that were able to increase the amount of fish caught. As we would expect, the stock began to replenish, but the total Cod caught in the following years did not reach anywhere near 1960s levels before the crash in total Cod caught in the 1990s. It appears from the graph that the trend is still declining, but without data from the 2010s, it is hard to say whether or not we are seeing an unsual decline is the number of Cod caught.
 
 ------
 
@@ -144,9 +175,17 @@ collapse_by_year
 
 
 
-ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + geom_line() + scale_y_reverse( lim=c(80,0))
+#ggplot(collapse_by_year, aes(tsyear, sum/collapsed * 100)) + geom_line() + scale_y_reverse( lim=c(80,0))
 
 ```
 
+
+In this section we attempted to create a graph that showed the percent decline in overall fish landings using the previous year's total landings as a base number. We were interested in seeing if for all fish, as time progresses, is there a decline in the number of fish being caught. 
+
+We were unsure how to replicate the graph in Worm et al. since we did not fully understand what collapsed taxa % included. It appeared that we needed to find where in the data total landings dropped by 10% of the maximum total landing by fish. From there we would plot the number of times a fish collapsed and create a proportion of the cummulative sum of collapsed fish over the total number of fish.
+
+Because we were unable to complete the analysis we wanted to do, we decided to research whether the claim made that in 2048, we will see a 100% decline in taxa was a likely projection. The paper, "Citation Patterns of a Controversial and High-Impact Paper: Worm et al. (2006) 'Impacts of Biodiversity Loss on Ocean Ecosystem Services' " goes into depth about the impacts of this 2048 claim, and how including this claim in their press released sparked an immense amount of coverage and citations for this paper. Boris Worm, the lead author of the paper debated the 2048 claim on NPR and from this, a collaborative project facilitated by the National Center for Ecological Synthesis and Analysis (NCEAS), was conducted and found that, "although 63% of assessed fisheries are below the biomass that would produce maximum sustainable yield, harvest rates are now at or below sustainable levels in 7 of 10 well-studied ecosystems. These lower harvest rates should promote rebuilding to biomass to levels that would support maximum sustainable yield" (Branch, 2013). This is positive news for fisheries, and is evidence against the claim. The paper then examines the effects of the 2048 claim in regards to the number of citations of this paper, and how this claim, which brought much of the attention to this paper, is very rarely cited, and only cited by the authors of this paper in their other work 1 out of the 55 times they cited their paper.
+
+Overall, we do not agree with the contraversial claim made by Worm et al. that in 2048, it is projected that we will see a 100% decline in taxa.  
 
 

@@ -1,12 +1,15 @@
 
-[![Build Status](https://travis-ci.com/espm-157/fish-template.svg?branch=master)](https://travis-ci.com/espm-157/fish-template)
+[![Build Status](https://travis-ci.com/harcourt-rebecca/hargupblup.svg?branch=master)](https://travis-ci.com/harcourt-rebecca/hargupblup)
 
 ## Team Members:
 
-- gup
-- full name, github handle
+- Rebecca Harcourt, harcourt-rebecca 
+- Kunal Gupta, kunalg04
 
-This repository is a template for your team's repository.
+## Module Overview
+
+In this module we looked into the analysis of global fisheries conducted by Worm et al.,
+in "Impacts of Biodiversity Loss on Ocean Ecosystem Service" in 2006. 
 
 ## assignment
 
@@ -15,6 +18,7 @@ All work for this assignment should be in the `assignment` directory.  You will 
 ## Special files
 
 All team repositories will also include most of the special files found here:
+fish-assignment_files/figure-gfm
 
 ### Common files
 
